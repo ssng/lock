@@ -29,6 +29,7 @@ export function setup(id, clientID, domain, options, hookRunner, emitEventFn, ha
       useTenantInfo: options.__useTenantInfo || false,
       hashCleanup: options.hashCleanup === false ? false : true,
       allowedConnections: Immutable.fromJS(options.allowedConnections || []),
+      hiddenConnections: Immutable.fromJS(options.hiddenConnections || []), // SSH new hiddenConnections
       useCustomPasswordlessConnection:
         options.useCustomPasswordlessConnection === true ? true : false,
       ui: extractUIOptions(id, options),
@@ -471,6 +472,11 @@ export function allowedConnections(m) {
   return tget(m, 'allowedConnections') || get(m, 'allowedConnections');
 }
 
+// SSH hiddenConnections
+export function hiddenConnections(m) {
+  return tget(m, 'hiddenConnections') || get(m, 'hiddenConnections');
+}
+
 export function connections(m, type = undefined, ...strategies) {
   if (arguments.length === 1) {
     return tget(m, 'connections', Map())
@@ -517,7 +523,15 @@ export function hasConnection(m, name) {
 export function filterConnections(m) {
   const allowed = allowedConnections(m);
 
-  const order = allowed.count() === 0 ? _ => 0 : c => allowed.indexOf(c.get('name'));
+  // SSH try to hide social connections for Go login
+  const hidden = hiddenConnections(m);
+  const order =
+    allowed.count() === 0
+      ? c => {
+          hidden.indexOf(c.get('name')) < 0 ? 0 : -1;
+        }
+      : c => allowed.indexOf(c.get('name'));
+  //  const order = allowed.count() === 0 ? _ => 0 : c => allowed.indexOf(c.get('name'));
 
   return tset(
     m,
@@ -644,6 +658,11 @@ export function overrideOptions(m, opts) {
 
   if (opts.allowedConnections) {
     m = tset(m, 'allowedConnections', Immutable.fromJS(opts.allowedConnections));
+  }
+
+  // SSH hiddenConnections
+  if (opts.hiddenConnections) {
+    m = tset(m, 'hiddenConnections', Immutable.fromJS(opts.hiddenConnections));
   }
 
   if (opts.flashMessage) {

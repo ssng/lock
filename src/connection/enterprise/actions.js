@@ -32,7 +32,7 @@ export function cancelHRD(id) {
 
 function getConnectionScopesFrom(m, connection) {
   const connectionScopes = l.auth.connectionScopes(m);
-  return connectionScopes.get(connection.get('name'));
+  return connectionScopes.get(connection.get('strategy')); // SSH use connection strategy instead of name
 }
 
 export function logIn(id) {
@@ -83,9 +83,12 @@ function logInSSO(id, connection, params) {
     field: field
   });
 
+  // SSH support guest user login
+  const hint = getFieldValue(m, field);
+
   coreLogIn(id, [field], {
     ...params,
     connection: connection.get('name'),
-    login_hint: getFieldValue(m, field)
+    login_hint: hint.startsWith('@') ? null : hint // SSH support guest user login
   });
 }

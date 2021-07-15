@@ -528,7 +528,7 @@ export function filterConnections(m) {
   const order =
     allowed.count() === 0
       ? c => {
-          hidden.indexOf(c.get('name')) < 0 ? 0 : -1;
+          return hidden.indexOf(c.get('name')) < 0 ? 0 : -1;
         }
       : c => allowed.indexOf(c.get('name'));
   //  const order = allowed.count() === 0 ? _ => 0 : c => allowed.indexOf(c.get('name'));

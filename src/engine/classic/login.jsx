@@ -73,7 +73,8 @@ const Component = ({ i18n, model }) => {
   // SSH
   const showPassword =
     l.hasSomeConnections(model, 'database') &&
-    !l.hasSomeConnections(model, 'enterprise') && !l.hasSomeConnections(model, 'social');
+    !l.hasSomeConnections(model, 'enterprise') &&
+    !l.hasSomeConnections(model, 'social');
   // SSH   (l.hasSomeConnections(model, 'database') || !!findADConnectionWithoutDomain(model));
   // ORIGINAL    !sso && (l.hasSomeConnections(model, 'database') || !!findADConnectionWithoutDomain(model));
 
@@ -165,7 +166,7 @@ const Component = ({ i18n, model }) => {
       if (dbUrlPart != '') {
         dbUrlPart += '&';
       }
-      dbUrlPart += param;
+      dbUrlPart += param === 'x_state' ? 'state' : param;
       dbUrlPart += '=';
       dbUrlPart += encodeURIComponent(config.extraParams[param]);
     }

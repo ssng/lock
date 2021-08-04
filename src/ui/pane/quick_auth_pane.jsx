@@ -4,6 +4,7 @@ import AuthButton from '../button/auth_button';
 
 const QuickAuthPane = props => {
   const {
+    noLoading, // SSH new property
     alternativeLabel,
     alternativeClickHandler,
     buttonLabel,
@@ -30,6 +31,13 @@ const QuickAuthPane = props => {
     </p>
   ) : null;
 
+  // SSH new logic to not include loading wheel
+  const loading = !noLoading && (
+    <div className="auth0-loading-container">
+      <div className="auth0-loading" />
+    </div>
+  );
+
   return (
     <div className="auth0-lock-last-login-pane">
       {header}
@@ -48,9 +56,7 @@ const QuickAuthPane = props => {
 
       {alternative}
 
-      <div className="auth0-loading-container">
-        <div className="auth0-loading" />
-      </div>
+      {loading}
     </div>
   );
 };

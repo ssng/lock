@@ -143,6 +143,7 @@ const Component = ({ i18n, model }) => {
       primaryColor={primaryColor}
       foregroundColor={foregroundColor}
       strategy={icon(ssoConnection.get('strategy'))}
+      noLoading={true}
     />
   );
 
@@ -188,12 +189,16 @@ const Component = ({ i18n, model }) => {
     dbConnection && (
       <QuickAuthPane
         buttonLabel={dbButtonLabel}
-        buttonClickHandler={e => (location.href = dbClickUrl)}
+        buttonClickHandler={e =>
+          document.querySelector('.auth0-lock').classList.add('auth0-lock-mode-loading') ||
+          (location.href = dbClickUrl)
+        }
         //header={headerText}
         buttonIcon={dbButtonIcon}
         primaryColor={dbPrimaryColor}
         foregroundColor={dbForegroundColor}
         strategy={dbConnection.get('strategy')}
+        noLoading={true}
       />
     );
 
@@ -241,14 +246,24 @@ const Component = ({ i18n, model }) => {
     dbConnection2 && (
       <QuickAuthPane
         buttonLabel={dbButtonLabel2}
-        buttonClickHandler={e => (location.href = dbClickUrl2)}
+        buttonClickHandler={e =>
+          document.querySelector('.auth0-lock').classList.add('auth0-lock-mode-loading') ||
+          (location.href = dbClickUrl2)
+        }
         //header={headerText}
         buttonIcon={dbButtonIcon2}
         primaryColor={dbPrimaryColor2}
         foregroundColor={dbForegroundColor2}
         strategy={dbConnection2.get('strategy')}
+        noLoading={true}
       />
     );
+
+  const loading = (
+    <div className="auth0-loading-container">
+      <div className="auth0-loading" />
+    </div>
+  );
 
   return (
     <div>
@@ -263,6 +278,7 @@ const Component = ({ i18n, model }) => {
         {dbSeparator2}
         {quickAuth}
         {separator2}
+        {loading}
         {login}
       </div>
     </div>
